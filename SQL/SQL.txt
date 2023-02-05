@@ -1,0 +1,231 @@
+use salsepeople;
+
+
+CREATE TABLE SALESPEOPLE
+(SNUM BIGINT(5) PRIMARY KEY,  
+SNAME CHAR(10),  
+CITY CHAR(20),  COMM DECIMAL(8,3)
+);
+
+select * from SALESPEOPLE
+
+INSERT INTO SALESPEOPLE VALUES (1001, 'Peel', 'London',0.12); 
+INSERT INTO SALESPEOPLE VALUES(1002, 'Serres','San Jose',0.13);
+INSERT INTO SALESPEOPLE VALUES(1003, 'Motika','London',0.11);
+INSERT INTO SALESPEOPLE VALUES(1004, 'Rafkin','Barcelona',0.15);
+INSERT INTO SALESPEOPLE VALUES(1005, 'Axelrod','New York',0.13);
+
+CREATE TABLE CUST(CNUM BIGINT(5) PRIMARY KEY, 
+ CNAME CHAR(20), 
+ CITY CHAR(20), 
+ RATING BIGINT(3),
+ SNUM BIGINT(4));
+ 
+ select * from CUST
+ 
+INSERT INTO CUST VALUES (2001, 'Hoffman', 'London',100,1001);
+INSERT INTO CUST VALUES (2002, 'giovanne', 'Rome',200,1002);
+INSERT INTO CUST VALUES (2003, 'Liu', 'SanJose',300,1003);
+INSERT INTO CUST VALUES (2004, 'Grass', 'Brelin',100,1002);
+INSERT INTO CUST VALUES (2007, 'Pereia', 'Rome',100,1004);
+
+CREATE TABLE ORDERS (
+  ONUM INT(5) PRIMARY KEY,
+  AMT DECIMAL(5, 2),
+  ODATE DATE,
+  CNUM INT(4),
+  SNUM INT(4)
+);
+
+ select * from orders
+ 
+  
+   INSERT INTO ORDERS VALUES (3001,18.69,'1994-10-03',2008,1007);
+ 
+INSERT INTO ORDERS VALUES (3002,15.32,'1994-10-04',3001,1008);
+INSERT INTO ORDERS VALUES (3003,20.50,'1994-10-05',3002,1009);
+INSERT INTO ORDERS VALUES (3004,12.99,'1994-10-06',3003,1010);
+INSERT INTO ORDERS VALUES (3005,17.64,'1994-10-07',3004,1011);
+INSERT INTO ORDERS VALUES (3006,19.21,'1994-10-08',3005,1012);
+INSERT INTO ORDERS VALUES (3007,16.88,'1994-10-09',3006,1013);
+INSERT INTO ORDERS VALUES (3008,14.57,'1994-10-10',3007,1014);
+INSERT INTO ORDERS VALUES (3009,18.42,'1994-10-11',3008,1015);
+INSERT INTO ORDERS VALUES (3010,19.98,'1994-10-12',3009,1016);
+ 	
+/*Display snum,sname,city and comm of all salespeople.*/
+Select snum, sname, city, comm from salespeople;
+
+/*Display all snum without duplicates from all orders.*/
+Select distinct snum from orders;
+
+SELECT sname, comm FROM salespeople WHERE city = 'London';
+
+Select cname from cust where rating = 100;
+
+Select ONUM, amt, odate from orders;
+
+Select cname from cust where rating > 200;
+
+Select cname from cust where city = ‘Liu’ or rating > 200;
+
+
+Select *  from orders where amt > 1000; 
+
+SELECT sname, city FROM salespeople WHERE comm > 0.10 AND city = 'London';
+
+
+SELECT cname FROM cust WHERE rating <= 100 OR city = 'Rome';
+
+SELECT sname, city FROM salespeople WHERE city IN ('Barcelona', 'London') AND comm > 0.10
+AND comm < 0.12;
+
+
+SELECT cname FROM cust WHERE city IS NULL;
+
+SELECT * FROM orders WHERE ODATE BETWEEN '1994-10-03' AND '1994-10-04';
+
+Select * from cust where snum in (select snum from salespeople where sname = 'Peel' or sname = 'Motika');
+
+Select * from cust where cname like 'A%' or cname like 'B%';
+
+Select * from orders where amt is not null and amt > 0;
+
+Select count(distinct snum) from orders;
+
+Select snum, max(amt), date(odate) from orders group by snum, date(odate);
+
+Select snum, max(amt) from orders where amt > 3000 group by snum;
+
+SELECT ODATE, SUM(AMT) AS Total_Amount FROM ORDERS GROUP BY ODATE
+ORDER BY Total_Amount DESC
+LIMIT 1;
+
+SELECT COUNT(*)
+FROM ORDERS
+WHERE ODATE = '1994-10-03';
+
+SELECT COUNT(DISTINCT CITY)
+FROM CUST
+WHERE CITY IS NOT NULL;
+
+SELECT CNUM, MIN(AMT) AS Smallest_Order
+FROM ORDERS
+GROUP BY CNUM;
+
+SELECT CNUM, CNAME
+FROM CUST
+WHERE CNAME LIKE 'G%'
+ORDER BY CNAME
+LIMIT 1;
+
+
+SELECT ODATE, COUNT(*) AS Orders
+FROM ORDERS
+GROUP BY ODATE;
+
+
+SELECT ONUM, SNUM, AMT * 0.12 AS Commission
+FROM ORDERS;
+
+
+SELECT CITY, MAX(RATING) AS Highest_Rating
+FROM CUST
+GROUP BY CITY;
+
+SELECT ODATE, SUM(AMT) AS Total_Amount
+FROM ORDERS
+GROUP BY ODATE
+ORDER BY Total_Amount DESC;
+
+SELECT S.SNAME, S.CITY, C.CNAME
+FROM SALESPEOPLE S
+JOIN CUST C ON S.CITY = C.CITY;
+
+SELECT C.CNAME, S.SNAME
+FROM CUST C
+INNER JOIN SALESPEOPLE S ON C.SNUM = S.SNUM;
+
+SELECT O.ONUM, C.CNAME
+FROM ORDERS O
+INNER JOIN CUST C ON O.CNUM = C.CNUM;
+
+SELECT O.ONUM, S.SNAME, C.CNAME
+FROM ORDERS O
+INNER JOIN CUST C ON O.CNUM = C.CNUM
+INNER JOIN SALESPEOPLE S ON O.SNUM = S.SNUM;
+
+SELECT C.CNAME, S.SNAME
+FROM CUST C
+INNER JOIN SALESPEOPLE S ON C.SNUM = S.SNUM
+WHERE S.COMM > 0.12;
+
+
+SELECT S.SNAME, (O.AMT * S.COMM) AS COMMISSION
+FROM ORDERS O
+INNER JOIN CUST C ON O.CNUM = C.CNUM
+INNER JOIN SALESPEOPLE S ON O.SNUM = S.SNUM
+WHERE C.RATING > 100;
+
+
+SELECT C1.CNAME, C2.CNAME
+FROM CUST C1
+INNER JOIN CUST C2 ON C1.RATING = C2.RATING
+WHERE C1.CNUM < C2.CNUM;
+
+
+SELECT C1.CNAME, C2.CNAME
+FROM CUST C1
+INNER JOIN CUST C2 ON C1.RATING = C2.RATING
+WHERE C1.CNUM < C2.CNUM;
+
+WITH CTE AS (
+  SELECT C.*, ROW_NUMBER() OVER (PARTITION BY RATING ORDER BY CNUM) AS ROWNUM
+  FROM CUST C
+)
+SELECT C1.CNAME, C2.CNAME, C3.CNAME
+FROM CTE C1
+INNER JOIN CTE C2 ON C1.RATING = C2.RATING AND C1.ROWNUM + 1 = C2.ROWNUM
+INNER JOIN CTE C3 ON C2.RATING = C3.RATING AND C2.ROWNUM + 1 = C3.ROWNUM
+WHERE C1.ROWNUM = 1;
+
+SELECT C.*
+FROM CUST C
+JOIN SALESPEOPLE S ON C.SNUM = S.SNUM
+WHERE S.SNAME = 'Serres'
+
+
+SELECT cname 
+FROM cust 
+WHERE city = (SELECT city FROM salespeople WHERE sname = 'Serres');
+
+SELECT cname 
+FROM cust 
+WHERE cnum IN (SELECT cnum FROM orders WHERE snum IN (SELECT snum FROM salespeople WHERE sname = 'Serres'));
+
+
+SELECT cname FROM cust WHERE snum IN (SELECT snum FROM cust GROUP BY snum HAVING COUNT(snum) > 1);
+
+SELECT DISTINCT a.cname 
+FROM cust a
+JOIN cust b
+ON a.snum = b.snum
+WHERE a.cnum != b.cnum;
+
+
+Select cname, city from cust where rating = (select rating from cust where cname = 'Hoffman') and cname != 'Hoffman'; 
+
+SELECT Onum FROM Orders WHERE Snum = (SELECT Snum FROM Salespeople WHERE Sname = 'Motika');
+
+Select onum, sname, cname, amt from orders a, salespeople b, cust c where a.snum = b.snum and a.cnum = c.cnum and c.cname = 'Hoffman';
+
+Select * from orders where amt > (select AVG(amt) from orders WHERE odate = '1994-10-03');
+
+Select AVG(comm) from salespeople where city = 'London';
+
+Select snum, cnum  from orders where cnum in (select cnum  from cust where city = 'London'); 
+
+Select comm from salespeople where snum in (select snum from cust where city = 'London');
+
+Select cnum, cname from cust where cnum > ( select snum+1000  from salespeople where sname = 'Serres');
+
+Select cnum, rating from cust where rating > ( select avg(rating)  from cust where city = 'San Jose');
