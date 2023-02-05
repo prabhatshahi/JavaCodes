@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Div and Span tags</title>
+
+    <style>
+      .container {
+        /*this is the div specifics*/
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        margin: 2px;
+        padding: 20px;
+        background-color: #009900;
+        color: white;
+        font-size: 25px;
+      }
+      
+      .highlight {
+        background-color: lightgreen;
+        color: black;
+        padding: 2px;
+        margin: 2px;
+      }
+
+      .blue {
+        color: blue;
+        padding: 2px;
+        margin: 2px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Div tag</h2>
+    <!--theses are the div blocks-->
+    <div class="container">div tag takes the whole line</div>
+    <div class="container">div tag takes the whole line</div>
+    <div class="container">div tag takes the whole line</div>
+
+    <h2>Span tag</h2>
+    <p>
+      <span class="highlight">Lorem, ipsum.</span> Lorem ipsum dolor sit amet consectetur adipisicing.
+      <span class="blue">Lorem</span> LOrem ipsum <span class="highlight">articles</span>
+      Lorem ipsum dolor, sit amet consectetur adipisicing.
+    </p>
+  </body>
+</html>
